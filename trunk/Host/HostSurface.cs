@@ -108,7 +108,16 @@ namespace Host
 					i++;
 				}
 
-				propertyGrid.SelectedObjects = comps;
+				//propertyGrid.SelectedObjects = comps;
+                // Just for testing purpose
+                CProperty myprop1 = new CProperty("Test1", "testvalue");
+                myprop1.Category = "test";
+                CProperty myprop2 = new CProperty("Test2", 1);
+                myprop2.Editor = new System.Drawing.Design.ColorEditor();
+                CPropertyCollection myProps = new CPropertyCollection();
+                myProps.Add(myprop1);
+                myProps.Add(myprop2);
+                propertyGrid.SelectedObject = myProps;
 			}
 		}
 
