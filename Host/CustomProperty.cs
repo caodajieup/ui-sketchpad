@@ -2,277 +2,254 @@
 using System.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Xml;
 #endregion
 
-#region CProperty
-public class CProperty
+#region Custom Property
+class CProperty : ICustomTypeDescriptor
 {
+    // Current Selected Object
+    private object mCurrentSelectObject;
+    private Dictionary<string, string> mObjectAttribs = new Dictionary<string, string>();
 
-    private string m_Name = string.Empty;
-
-    private bool m_bReadOnly = false;
-
-    private bool m_bVisible = true;
-
-    private object m_Value = null;
-
-    private string m_Category = string.Empty;
-
-    TypeConverter m_Converter = null;
-
-    object m_Editor = null;
-
-
-    public CProperty(string name, object value)
+    public CProperty(object pSelectObject, XmlNodeList pObjectPropertys)
     {
-
-        m_Name = name;
-
-        m_Value = value;
-
+        mCurrentSelectObject = pSelectObject;
+        foreach (XmlNode tmpXNode in pObjectPropertys)
+        {
+            mObjectAttribs.Add(tmpXNode.Attributes["Name"].Value, tmpXNode.Attributes["Caption"].Value);
+        }
     }
 
-    public CProperty(string name, object value, bool bReadOnly, bool bVisible)
-    {
-        m_Name = name;
-
-        m_Value = value;
-
-        m_bReadOnly = bReadOnly;
-
-        m_bVisible = bVisible;
-
-    }
-
-    public bool ReadOnly
-    {
-
-        get { return m_bReadOnly; }
-
-        set { m_bReadOnly = value; }
-
-    }
-
-    public virtual TypeConverter Converter
-    {
-
-        get { return m_Converter; }
-
-        set { m_Converter = value; }
-
-    }
-
-    public string Name
-    {
-
-        get { return m_Name; }
-
-        set { m_Name = value; }
-
-    }
-
-    public bool Visible
-    {
-
-        get { return m_bVisible; }
-
-        set { m_bVisible = value; }
-
-    }
-
-    public virtual object Value
-    {
-
-        get { return m_Value; }
-
-        set { m_Value = value; }
-
-    }
-
-    public string Category
-    {
-
-        get { return m_Category; }
-
-        set { m_Category = value; }
-
-    }
-
-    public virtual object Editor
-    {
-
-        get { return m_Editor; }
-
-        set { m_Editor = value; }
-
-    }
-
-}
-#endregion
-
-#region CPropertyCollection
-public class CPropertyCollection : List<CProperty>, ICustomTypeDescriptor
-{
-    public new void Add(CProperty value)
-    {
-        base.Add(value);
-    }
-
-    #region "TypeDescriptor"
-    public String GetClassName()
-    {
-        return TypeDescriptor.GetClassName(this, true);
-    }
-
+    #region ICustomTypeDescriptor Members
     public AttributeCollection GetAttributes()
     {
-        return TypeDescriptor.GetAttributes(this, true);
+        return TypeDescriptor.GetAttributes(mCurrentSelectObject);
     }
 
-    public String GetComponentName()
+    public string GetClassName()
     {
-        return TypeDescriptor.GetComponentName(this, true);
+        return TypeDescriptor.GetClassName(mCurrentSelectObject);
     }
 
-
+    public string GetComponentName()
+    {
+        return TypeDescriptor.GetComponentName(mCurrentSelectObject);
+    }
 
     public TypeConverter GetConverter()
     {
-        return TypeDescriptor.GetConverter(this, true);
+        return TypeDescriptor.GetConverter(mCurrentSelectObject);
     }
 
     public EventDescriptor GetDefaultEvent()
     {
-        return TypeDescriptor.GetDefaultEvent(this, true);
+        return TypeDescriptor.GetDefaultEvent(mCurrentSelectObject);
     }
 
     public PropertyDescriptor GetDefaultProperty()
     {
-        return TypeDescriptor.GetDefaultProperty(this, true);
+        return TypeDescriptor.GetDefaultProperty(mCurrentSelectObject);
     }
 
     public object GetEditor(Type editorBaseType)
     {
-        return TypeDescriptor.GetEditor(this, editorBaseType, true);
+        return TypeDescriptor.GetEditor(mCurrentSelectObject, editorBaseType);
     }
 
     public EventDescriptorCollection GetEvents(Attribute[] attributes)
     {
-        return TypeDescriptor.GetEvents(this, attributes, true);
+        return TypeDescriptor.GetEvents(mCurrentSelectObject, attributes);
     }
 
     public EventDescriptorCollection GetEvents()
     {
-        return TypeDescriptor.GetEvents(this, true);
+        return TypeDescriptor.GetEvents(mCurrentSelectObject);
     }
 
     public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
     {
-        PropertyDescriptor[] propDes = new PropertyDescriptor[this.Count];
+        List<CPropertyDescriptor> tmpPDCLst = new List<CPropertyDescriptor>();
+        PropertyDescriptorCollection tmpPDC = TypeDescriptor.GetProperties(mCurrentSelectObject, attributes);
+        CPropertyDescriptor tmpCPD;
 
-        for (int i = 0; i < this.Count; i++)
+        foreach(PropertyDescriptor tmpPD in tmpPDC)
         {
-            CProperty prop = (CProperty)this[i];
-
-            propDes[i] = new CPropertyDescriptor(ref prop, attributes);
+            if (mObjectAttribs.ContainsKey(tmpPD.Name))
+            {
+                tmpCPD = new CPropertyDescriptor(mCurrentSelectObject, tmpPD);
+                tmpCPD.SetDisplayName(mObjectAttribs[tmpPD.Name]);
+                tmpCPD.SetCategory(tmpPD.Category);
+                tmpPDCLst.Add(tmpCPD);
+            }
         }
 
-        return new PropertyDescriptorCollection(propDes);
+        return new PropertyDescriptorCollection(tmpPDCLst.ToArray());
     }
 
     public PropertyDescriptorCollection GetProperties()
     {
-        return TypeDescriptor.GetProperties(this, true);
+        return TypeDescriptor.GetProperties(mCurrentSelectObject);
     }
 
     public object GetPropertyOwner(PropertyDescriptor pd)
     {
-        return this;
+        return mCurrentSelectObject;
     }
-
     #endregion
 }
-
 #endregion
 
-#region CPropertyDescriptor
-public class CPropertyDescriptor : PropertyDescriptor
+#region Custom Property Descriptor
+class CPropertyDescriptor : PropertyDescriptor
 {
-
-    CProperty m_Property;
-
-    public CPropertyDescriptor(ref CProperty property, Attribute[] attrs)
-        : base(property.Name, attrs)
+    private PropertyDescriptor mProp;
+    private object mComponent;
+    public CPropertyDescriptor(object pComponent, PropertyDescriptor pPD)
+        : base(pPD)
     {
-        m_Property = property;
+        mCategory = base.Category;
+        mDisplayName = base.DisplayName;
+        mProp = pPD;
+        mComponent = pComponent;
     }
 
-    #region PropertyDescriptor "region"
+    private string mCategory;
+    public override string Category
+    {
+        get { return mCategory; }
+    }
+
+    private string mDisplayName;
+    public override string DisplayName
+    {
+        get { return mDisplayName; }
+    }
+    public void SetDisplayName(string pDispalyName)
+    {
+        mDisplayName = pDispalyName;
+    }
+
+    public void SetCategory(string pCategory)
+    {
+        mCategory = pCategory;
+    }
     public override bool CanResetValue(object component)
     {
-        return false;
+        return mProp.CanResetValue(component);
     }
 
     public override Type ComponentType
     {
-        get { return null; }
+        get { return mProp.ComponentType; }
     }
 
     public override object GetValue(object component)
     {
-        return m_Property.Value;
-    }
-
-    public override string Description
-    {
-        get { return m_Property.Name; }
-    }
-
-    public override string Category
-    {
-        get { return m_Property.Category; }
-    }
-
-    public override string DisplayName
-    {
-        get { return m_Property.Name; }
+        return mProp.GetValue(component);
     }
 
     public override bool IsReadOnly
     {
-        get { return m_Property.ReadOnly; }
-    }
-
-    public override TypeConverter Converter
-    {
-        get { return m_Property.Converter; }
-    }
-
-    public override void ResetValue(object component)
-    {
-    }
-
-    public override bool ShouldSerializeValue(object component)
-    {
-        return false;
-    }
-
-    public override void SetValue(object component, object value)
-    {
-        m_Property.Value = value;
+        get { return mProp.IsReadOnly; }
     }
 
     public override Type PropertyType
     {
-        get { return m_Property.Value.GetType(); }
+        get { return mProp.PropertyType; }
     }
 
-    public override object GetEditor(Type editorBaseType)
+    public override void ResetValue(object component) { mProp.ResetValue(component); }
+    public override void SetValue(object component, object value) { mProp.SetValue(component, value); }
+    
+    public override bool ShouldSerializeValue(object component)
     {
-        return m_Property.Editor == null ? base.GetEditor(editorBaseType) : m_Property.Editor;
+        return mProp.ShouldSerializeValue(component);
     }
-
-    #endregion
 }
-
 #endregion
+
+//#region CPropertyCollection
+//public class CPropertyCollection : List<CProperty>, ICustomTypeDescriptor
+//{
+//    public new void Add(CProperty value)
+//    {
+//        base.Add(value);
+//    }
+
+//    #region "TypeDescriptor"
+//    public String GetClassName()
+//    {
+//        return TypeDescriptor.GetClassName(this, true);
+//    }
+
+//    public AttributeCollection GetAttributes()
+//    {
+//        return TypeDescriptor.GetAttributes(this, true);
+//    }
+
+//    public String GetComponentName()
+//    {
+//        return TypeDescriptor.GetComponentName(this, true);
+//    }
+
+
+
+//    public TypeConverter GetConverter()
+//    {
+//        return TypeDescriptor.GetConverter(this, true);
+//    }
+
+//    public EventDescriptor GetDefaultEvent()
+//    {
+//        return TypeDescriptor.GetDefaultEvent(this, true);
+//    }
+
+//    public PropertyDescriptor GetDefaultProperty()
+//    {
+//        return TypeDescriptor.GetDefaultProperty(this, true);
+//    }
+
+//    public object GetEditor(Type editorBaseType)
+//    {
+//        return TypeDescriptor.GetEditor(this, editorBaseType, true);
+//    }
+
+//    public EventDescriptorCollection GetEvents(Attribute[] attributes)
+//    {
+//        return TypeDescriptor.GetEvents(this, attributes, true);
+//    }
+
+//    public EventDescriptorCollection GetEvents()
+//    {
+//        return TypeDescriptor.GetEvents(this, true);
+//    }
+
+//    public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+//    {
+//        PropertyDescriptor[] propDes = new PropertyDescriptor[this.Count];
+
+//        for (int i = 0; i < this.Count; i++)
+//        {
+//            CProperty prop = (CProperty)this[i];
+
+//            propDes[i] = new CPropertyDescriptor(ref prop, attributes);
+//        }
+
+//        return new PropertyDescriptorCollection(propDes);
+//    }
+
+//    public PropertyDescriptorCollection GetProperties()
+//    {
+//        return TypeDescriptor.GetProperties(this, true);
+//    }
+
+//    public object GetPropertyOwner(PropertyDescriptor pd)
+//    {
+//        return this;
+//    }
+
+//    #endregion
+//}
+
+//#endregion

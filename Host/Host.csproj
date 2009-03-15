@@ -39,14 +39,19 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy $(ProjectDir)Components.xml $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CustomProperty.cs" />
+    <Compile Include="Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor.Designer.cs">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </Compile>
     <Compile Include="HostControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -67,6 +72,9 @@
     <Compile Include="Services\MenuCommandService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HostControl.resx">
       <DependentUpon>HostControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -99,5 +107,8 @@
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="XML\Components.xml" />
   </ItemGroup>
 </Project>

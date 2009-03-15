@@ -67,6 +67,14 @@ namespace Shell
                     PerformAction("&Delete");
                     break;
 
+                case "500":
+                    PerformAction("&Undo");
+                    break;
+
+                case "600":
+                    PerformAction("&Redo");
+                    break;
+
                 default:
                     break;
             }
@@ -104,6 +112,8 @@ namespace Shell
             UnregisterHotKey(Handle, 200);
             UnregisterHotKey(Handle, 300);
             UnregisterHotKey(Handle, 400);
+            UnregisterHotKey(Handle, 500);
+            UnregisterHotKey(Handle, 600);
         }
 
         public MainShell()
@@ -136,6 +146,8 @@ namespace Shell
             RegisterHotKey(Handle, 200, 2, Keys.V);
             RegisterHotKey(Handle, 300, 2, Keys.X);
             RegisterHotKey(Handle, 400, 0, Keys.Delete);
+            RegisterHotKey(Handle, 500, 2, Keys.Z);
+            RegisterHotKey(Handle, 600, 2, Keys.Y);
 
             // Create default form
             try
