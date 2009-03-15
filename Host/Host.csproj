@@ -39,7 +39,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy $(ProjectDir)Components.xml $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>copy $(ProjectDir)\XML\Components.xml $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
