@@ -11,7 +11,7 @@ namespace ToolboxLibrary
     {
         Toolbox m_toolbox = null;
         private Type[] windowsFormsToolTypes = new Type[] {
-			typeof(System.Windows.Forms.PropertyGrid), 
+            typeof(System.Windows.Forms.PropertyGrid), 
             typeof(System.Windows.Forms.Label), 
             typeof(System.Windows.Forms.LinkLabel), 
             typeof(System.Windows.Forms.Button), 
@@ -63,6 +63,15 @@ namespace ToolboxLibrary
         private Type[] userControlsToolTypes = new Type[] {
 			typeof(System.Windows.Forms.UserControl)
 		};
+        private Type[] ribbonControlsToolTypes = new Type[] {
+            typeof(System.Windows.Forms.Label), 
+            typeof(System.Windows.Forms.Button), 
+            typeof(System.Windows.Forms.GroupBox), 
+            typeof(System.Windows.Forms.Panel), 
+            typeof(System.Windows.Forms.ComboBox), 
+            typeof(System.Windows.Forms.TabControl), 
+            typeof(System.Windows.Forms.Splitter)
+        };
 
         public ToolboxXmlManager(Toolbox toolbox)
         {
@@ -98,7 +107,9 @@ namespace ToolboxLibrary
         private ToolboxTabCollection PopulateToolboxTabs()
         {
             ToolboxTabCollection toolboxTabs = new ToolboxTabCollection();
-            string[] tabNames = { Strings.WindowsForms };
+            string[] tabNames = { /*Strings.WindowsForms, Strings.Components*,
+                                  Strings.Data, Strings.UserControls*/
+                                  Strings.RibbonControls };
 
             for (int i = 0; i < tabNames.Length; i++)
             {
@@ -132,6 +143,9 @@ namespace ToolboxLibrary
                     break;
                 case Strings.UserControls:
                     typeArray = userControlsToolTypes;
+                    break;
+                case Strings.RibbonControls:
+                    typeArray = ribbonControlsToolTypes;
                     break;
                 default:
                     break;
@@ -255,6 +269,7 @@ namespace ToolboxLibrary
             public const string Components = "Components";
             public const string Data = "Data";
             public const string UserControls = "User Controls";
+            public const string RibbonControls = "Ribbon Controls";
         }
 
     }// class

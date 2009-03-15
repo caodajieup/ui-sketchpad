@@ -1,3 +1,4 @@
+#region Header
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -7,6 +8,8 @@ using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Xml;
+#endregion
 
 using MyMenuCommandServices = Sketchpad.UI.Services.MenuCommandService;
 
@@ -22,7 +25,8 @@ namespace Host
 	public class HostSurface : DesignSurface
 	{
 		private BasicDesignerLoader _loader;
-		private ISelectionService _selectionService; 
+		private ISelectionService _selectionService;
+        private XmlDocument _xDoc = new XmlDocument();
 
 		public HostSurface() : base()
 		{
@@ -66,6 +70,9 @@ namespace Host
 					throw new Exception("Undefined Host Type: " + hostType.ToString());
 				}
 
+                // Loading control configuration xml
+                _xDoc.Load(Application.StartupPath + "\\Components.xml");
+
 				// Set SelectionService - SelectionChanged event handler
 				_selectionService = (ISelectionService)(this.ServiceContainer.GetService(typeof(ISelectionService)));
 				_selectionService.SelectionChanged += new EventHandler(selectionService_SelectionChanged);
@@ -96,8 +103,11 @@ namespace Host
 			if (_selectionService != null)
 			{
 				ICollection selectedComponents = _selectionService.GetSelectedComponents();
-				PropertyGrid propertyGrid = (PropertyGrid)this.GetService(typeof(PropertyGrid));
+                // Now, we only support single selected object
+                if (selectedComponents == null || selectedComponents.Count != 1)
+                    return;
 
+				PropertyGrid propertyGrid = (PropertyGrid)this.GetService(typeof(PropertyGrid));
 
 				object[] comps = new object[selectedComponents.Count];
 				int i = 0;
@@ -108,16 +118,25 @@ namespace Host
 					i++;
 				}
 
-				//propertyGrid.SelectedObjects = comps;
-                // Just for testing purpose
-                CProperty myprop1 = new CProperty("Test1", "testvalue");
-                myprop1.Category = "test";
-                CProperty myprop2 = new CProperty("Test2", 1);
-                myprop2.Editor = new System.Drawing.Design.ColorEditor();
-                CPropertyCollection myProps = new CPropertyCollection();
-                myProps.Add(myprop1);
-                myProps.Add(myprop2);
-                propertyGrid.SelectedObject = myProps;
+                XmlNode tmpXNode = null;
+                CProperty cp = null;
+                Type compType = comps[0].GetType();
+                if (compType == typeof(System.Windows.Forms.Button))
+                {
+                    tmpXNode = _xDoc.SelectSingleNode("Components/Component[@Name=\"Button\"]");
+                }
+                else if (compType == typeof(System.Windows.Forms.Label))
+                {
+                    tmpXNode = _xDoc.SelectSingleNode("Components/Component[@Name=\"Label\"]");
+                }
+                
+
+                if (tmpXNode != null)
+                {
+                    XmlNodeList tmpXPropLst = tmpXNode.SelectNodes("Propertys/Property");
+                    cp = new CProperty(comps[0], tmpXPropLst);
+                }
+                propertyGrid.SelectedObject = cp;
 			}
 		}
 
