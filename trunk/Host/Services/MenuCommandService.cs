@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.ComponentModel.Design;
-using System.Collections;
+using System.Collections.Generic;
 using Sketchpad.UI.Controls;
 
 using CommandID = System.ComponentModel.Design.CommandID;
@@ -26,7 +26,7 @@ namespace Sketchpad.UI.Services
         public MenuCommandService(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
-            this.panel = null;
+            this.panel =  new Control();
             //this.InitializeGlobalCommands();
         }
 
@@ -36,59 +36,97 @@ namespace Sketchpad.UI.Services
         //    this.AddCommand(new MenuCommand(propertiesCodeCommand.CommandCallBack, propertiesCodeCommand.CommandID));
         //}
 
+        private void OnMenuClicked(object sender, EventArgs args)
+        {
+            MenuItem item = sender as MenuItem;
+            if (item != null)
+            {
+                MenuCommand cmd = item.Tag as MenuCommand;
+                cmd.Invoke();
+            }
+        }
+
+        private MenuItem[] GetSelectionMenuItems()
+        {
+            List<MenuItem> menuItems = new List<MenuItem>();
+
+            ISelectionService selectionService = GetService(typeof(ISelectionService)) as ISelectionService;
+
+            if (selectionService != null)
+            {
+                Dictionary<CommandID, string> selectionCommands = new Dictionary<CommandID, string>();
+                selectionCommands.Add(StandardCommands.Cut, "Cut");
+                selectionCommands.Add(StandardCommands.Copy, "Copy");
+                selectionCommands.Add(StandardCommands.Paste, "Paste");
+                selectionCommands.Add(StandardCommands.Delete, "Delete");
+
+                foreach (CommandID id in selectionCommands.Keys)
+                {
+                    MenuCommand command = FindCommand(id);
+                    if (command != null)
+                    {
+                        MenuItem menuItem = new MenuItem(selectionCommands[id], new EventHandler(OnMenuClicked));
+                        menuItem.Tag = command;
+                        menuItems.Add(menuItem);
+                    }
+                }
+            }
+
+            return menuItems.ToArray();
+        }
+
         public override void ShowContextMenu(CommandID menuID, int x, int y)
         {
-            //string contextMenuPath = "/SharpDevelop/FormsDesigner/ContextMenus/";
+            // string contextMenuPath = "/SharpDevelop/FormsDesigner/ContextMenus/";
 
-            //if (menuID == MenuCommands.ComponentTrayMenu)
-            //{
-            //    contextMenuPath += "ComponentTrayMenu";
-            //}
-            //else if (menuID == MenuCommands.ContainerMenu)
-            //{
-            //    contextMenuPath += "ContainerMenu";
-            //}
-            //else if (menuID == MenuCommands.SelectionMenu)
-            //{
-            //    contextMenuPath += "SelectionMenu";
-            //}
-            //else if (menuID == MenuCommands.TraySelectionMenu)
-            //{
-            //    contextMenuPath += "TraySelectionMenu";
-            //}
-            //else
-            //{
-            //    throw new Exception();
-            //}
+            if (menuID == MenuCommands.SelectionMenu || menuID == MenuCommands.ContainerMenu)
+            {
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem[] items = GetSelectionMenuItems();
+
+                if (items.Length > 0)
+                {
+                    contextMenu.MenuItems.Add(new MenuItem("-"));
+                    foreach(MenuItem item in items)
+                    {
+                        contextMenu.MenuItems.Add(item);
+                    }
+                }
+                contextMenu.Show(panel, panel.PointToClient(new Point(x, y)));
+            }
+            else
+            {
+                throw new Exception();
+            }
             //Point p = panel.PointToClient(new Point(x, y));
 
 
             //MenuService.ShowContextMenu(this, contextMenuPath, panel, p.X, p.Y);
-            ISelectionService selectionService = (ISelectionService)(this.GetService(typeof(ISelectionService)));
-            ICollection selectedComponents = selectionService.GetSelectedComponents();
-            PropertyGrid propertyGrid = (PropertyGrid)this.GetService(typeof(PropertyGrid));
+            //ISelectionService selectionService = (ISelectionService)(this.GetService(typeof(ISelectionService)));
+            //ICollection selectedComponents = selectionService.GetSelectedComponents();
+            //PropertyGrid propertyGrid = (PropertyGrid)this.GetService(typeof(PropertyGrid));
 
-            if (selectedComponents.Count != 1)
-                return;
+            //if (selectedComponents.Count != 1)
+            //    return;
 
-            Editor ed = new Editor();
-            if (ed.ShowDialog() == DialogResult.OK)
-            {
-                object[] comps = new object[selectedComponents.Count];
-                int i = 0;
+            //Editor ed = new Editor();
+            //if (ed.ShowDialog() == DialogResult.OK)
+            //{
+            //    object[] comps = new object[selectedComponents.Count];
+            //    int i = 0;
 
-                foreach (Object o in selectedComponents)
-                {
-                    comps[i] = o;
-                    i++;
-                }
-                if (comps[0].GetType() == typeof(System.Windows.Forms.Button))
-                {
-                    Button btn = comps[0] as Button;
-                    btn.Text = ed.Name;
-                    propertyGrid.SelectedObject = btn;
-                }
-            }
+            //    foreach (Object o in selectedComponents)
+            //    {
+            //        comps[i] = o;
+            //        i++;
+            //    }
+            //    if (comps[0].GetType() == typeof(System.Windows.Forms.Button))
+            //    {
+            //        Button btn = comps[0] as Button;
+            //        btn.Text = ed.Name;
+            //        propertyGrid.SelectedObject = btn;
+            //    }
+            //}
         }
     }
 }
