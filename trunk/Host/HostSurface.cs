@@ -9,9 +9,10 @@ using System.Data;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Xml;
-#endregion
+using Sketchpad.UI.Services;
 
 using MyMenuCommandServices = Sketchpad.UI.Services.MenuCommandService;
+#endregion
 
 namespace Host 
 {
@@ -24,16 +25,20 @@ namespace Host
     /// </summary>
 	public class HostSurface : DesignSurface
 	{
-		private BasicDesignerLoader _loader;
-		private ISelectionService _selectionService;
-        private XmlDocument _xDoc = new XmlDocument();
+		BasicDesignerLoader _loader;
+		ISelectionService _selectionService;
+        XmlDocument _xDoc = new XmlDocument();
 
 		public HostSurface() : base()
 		{
+            //IDesignerHost host = (IDesignerHost)this.GetService(typeof(IDesignerHost));
+            //this.AddService(typeof(UndoEngine), new FormsDesignerUndoEngine(host));
             this.AddService(typeof(IMenuCommandService), new MyMenuCommandServices(this));
 		}
 		public HostSurface(IServiceProvider parentProvider) : base(parentProvider)
 		{
+            //IDesignerHost host = (IDesignerHost)this.GetService(typeof(IDesignerHost));
+            //this.AddService(typeof(UndoEngine), new FormsDesignerUndoEngine(host));
             this.AddService(typeof(IMenuCommandService), new MyMenuCommandServices(this));
         }
 

@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using Loader;
 
+using Sketchpad.UI.Services;
+
 namespace Host
 {
 	public enum LoaderType

@@ -69,6 +69,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RandomUtil.cs" />
+    <Compile Include="Commands\EditCommands.cs" />
+    <Compile Include="Services\UndoEngine.cs" />
     <Compile Include="Services\MenuCommandService.cs" />
   </ItemGroup>
   <ItemGroup>
