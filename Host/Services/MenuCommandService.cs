@@ -20,21 +20,26 @@ namespace Sketchpad.UI.Services
             : base(serviceProvider)
         {
             this.panel = panel;
-            //this.InitializeGlobalCommands();
+            this.InitializeGlobalCommands();
         }
 
         public MenuCommandService(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
             this.panel =  new Control();
-            //this.InitializeGlobalCommands();
+            this.InitializeGlobalCommands();
         }
 
-        //private void InitializeGlobalCommands()
-        //{
-        //    this.AddCommand(new MenuCommand(viewCodeCommand.CommandCallBack, viewCodeCommand.CommandID));
-        //    this.AddCommand(new MenuCommand(propertiesCodeCommand.CommandCallBack, propertiesCodeCommand.CommandID));
-        //}
+        private void Run(object sender, EventArgs e)
+        {
+            MessageBox.Show("gan");
+        }
+        private void InitializeGlobalCommands()
+        {
+            this.AddCommand(new MenuCommand(Run, StandardCommands.Undo));
+            this.AddCommand(new MenuCommand(Run, StandardCommands.Redo));
+
+        }
 
         private void OnMenuClicked(object sender, EventArgs args)
         {
@@ -59,6 +64,8 @@ namespace Sketchpad.UI.Services
                 selectionCommands.Add(StandardCommands.Copy, "Copy");
                 selectionCommands.Add(StandardCommands.Paste, "Paste");
                 selectionCommands.Add(StandardCommands.Delete, "Delete");
+                selectionCommands.Add(StandardCommands.Undo, "Undo");
+                selectionCommands.Add(StandardCommands.Redo, "Redo");
 
                 foreach (CommandID id in selectionCommands.Keys)
                 {
