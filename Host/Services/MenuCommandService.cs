@@ -30,15 +30,23 @@ namespace Sketchpad.UI.Services
             this.InitializeGlobalCommands();
         }
 
-        private void Run(object sender, EventArgs e)
+        void ExecuteUndo(object sender, EventArgs e)
         {
-            MessageBox.Show("gan");
+            MyUndoEngine undoEngine = GetService(typeof(UndoEngine)) as MyUndoEngine;
+            if (undoEngine != null)
+                undoEngine.Undo();
         }
+        void ExecuteRedo(object sender, EventArgs e)
+        {
+            MyUndoEngine undoEngine = GetService(typeof(UndoEngine)) as MyUndoEngine;
+            if (undoEngine != null)
+                undoEngine.Redo();
+        }
+
         private void InitializeGlobalCommands()
         {
-            this.AddCommand(new MenuCommand(Run, StandardCommands.Undo));
-            this.AddCommand(new MenuCommand(Run, StandardCommands.Redo));
-
+            this.AddCommand(new MenuCommand(ExecuteUndo, StandardCommands.Undo));
+            this.AddCommand(new MenuCommand(ExecuteRedo, StandardCommands.Redo));
         }
 
         private void OnMenuClicked(object sender, EventArgs args)

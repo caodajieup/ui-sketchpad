@@ -22,12 +22,12 @@ namespace Sketchpad.UI.Services
         void Redo();
     }
 
-    public class FormsDesignerUndoEngine : UndoEngine, IUndoHandler
+    public class MyUndoEngine : UndoEngine, IUndoHandler
     {
         Stack<UndoEngine.UndoUnit> undoStack = new Stack<UndoEngine.UndoUnit>();
         Stack<UndoEngine.UndoUnit> redoStack = new Stack<UndoEngine.UndoUnit>();
 
-        public FormsDesignerUndoEngine(IServiceProvider provider)
+        public MyUndoEngine(IServiceProvider provider)
             : base(provider)
         {
         }

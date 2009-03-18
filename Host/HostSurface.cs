@@ -31,15 +31,21 @@ namespace Host
 
 		public HostSurface() : base()
 		{
-            //IDesignerHost host = (IDesignerHost)this.GetService(typeof(IDesignerHost));
-            //this.AddService(typeof(UndoEngine), new FormsDesignerUndoEngine(host));
-            this.AddService(typeof(IMenuCommandService), new MyMenuCommandServices(this));
+            AddService(typeof(ComponentSerializationService), new CodeDomComponentSerializationService(this));
+            AddService(typeof(IDesignerSerializationService), new DesignerSerializationService(this));
+            AddService(typeof(IMenuCommandService), new MyMenuCommandServices(this));
+            MyUndoEngine undoEngine = new MyUndoEngine(this);
+            //undoEngine.Enabled = false;
+            AddService(typeof(UndoEngine), undoEngine);
 		}
 		public HostSurface(IServiceProvider parentProvider) : base(parentProvider)
 		{
-            //IDesignerHost host = (IDesignerHost)this.GetService(typeof(IDesignerHost));
-            //this.AddService(typeof(UndoEngine), new FormsDesignerUndoEngine(host));
-            this.AddService(typeof(IMenuCommandService), new MyMenuCommandServices(this));
+            AddService(typeof(ComponentSerializationService), new CodeDomComponentSerializationService(this));
+            AddService(typeof(IDesignerSerializationService), new DesignerSerializationService(this));
+            AddService(typeof(IMenuCommandService), new MyMenuCommandServices(this));
+            MyUndoEngine undoEngine = new MyUndoEngine(this);
+            //undoEngine.Enabled = false;
+            AddService(typeof(UndoEngine), undoEngine);
         }
 
 		internal void Initialize()
