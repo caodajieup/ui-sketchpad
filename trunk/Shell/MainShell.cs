@@ -153,10 +153,10 @@ namespace Shell
             try
             {
                 _formCount++;
-                HostControl hc = _hostSurfaceManager.GetNewHost(typeof(Form), LoaderType.CodeDomDesignerLoader);
+                HostControl hc = _hostSurfaceManager.GetNewHost(typeof(Form), LoaderType.NoLoader/*CurrentMenuSelectionLoaderType*/);
                 AddTabForNewHost("Form" + _formCount.ToString() + " - " + Strings.Design, hc);
             }
-            catch
+            catch(Exception e)
             {
                 MessageBox.Show("Error in creating new host", "Shell Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
