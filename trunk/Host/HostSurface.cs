@@ -140,14 +140,19 @@ namespace Host
                 {
                     tmpXNode = _xDoc.SelectSingleNode("Components/Component[@Name=\"Label\"]");
                 }
-                
+
 
                 if (tmpXNode != null)
                 {
                     XmlNodeList tmpXPropLst = tmpXNode.SelectNodes("Propertys/Property");
                     cp = new CProperty(comps[0], tmpXPropLst);
+                    propertyGrid.SelectedObject = cp;
                 }
-                propertyGrid.SelectedObject = cp;
+                else
+                {
+                    propertyGrid.SelectedObjects = comps;
+                }
+                
 			}
 		}
 

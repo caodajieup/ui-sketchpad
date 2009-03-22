@@ -70,7 +70,8 @@ namespace ToolboxLibrary
             typeof(System.Windows.Forms.Panel), 
             typeof(System.Windows.Forms.ComboBox), 
             typeof(System.Windows.Forms.TabControl), 
-            typeof(System.Windows.Forms.Splitter)
+            typeof(System.Windows.Forms.Splitter),
+            typeof(Sketchpad.UI.Controls.RibbonCommand)
         };
 
         public ToolboxXmlManager(Toolbox toolbox)

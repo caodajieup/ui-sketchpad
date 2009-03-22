@@ -11,6 +11,11 @@ using MenuCommand = System.ComponentModel.Design.MenuCommand;
 
 namespace Sketchpad.UI.Services
 {
+    class MyMenuCommands
+    {
+        public static readonly CommandID AddTabPage = new CommandID(StandardCommands.Undo.Guid, 0x1001);
+    }
+
     class MenuCommandService : System.ComponentModel.Design.MenuCommandService
     {
 
@@ -30,6 +35,31 @@ namespace Sketchpad.UI.Services
             this.InitializeGlobalCommands();
         }
 
+        void ExecuteAddTabPage(object sender, EventArgs e)
+        {
+            ISelectionService selectionService = GetService(typeof(ISelectionService)) as ISelectionService;
+            if (selectionService != null)
+            {
+                System.Collections.ICollection selectedComps = selectionService.GetSelectedComponents();
+                if (selectedComps != null && selectedComps.Count == 1)
+                {
+                    object[] comps = new object[selectedComps.Count];
+                    int i = 0;
+                    foreach (object obj in selectedComps)
+                    {
+                        comps[i] = obj;
+                    }
+                    TabControl tab = comps[0] as TabControl;
+                    if (tab != null)
+                    {
+                        string title = "TabPage " + (tab.TabCount + 1).ToString();
+                        TabPage newPage = new TabPage(title);
+                        tab.TabPages.Add(newPage);
+                    }
+                }
+            }
+        }
+
         void ExecuteUndo(object sender, EventArgs e)
         {
             MyUndoEngine undoEngine = GetService(typeof(UndoEngine)) as MyUndoEngine;
@@ -47,6 +77,7 @@ namespace Sketchpad.UI.Services
         {
             this.AddCommand(new MenuCommand(ExecuteUndo, StandardCommands.Undo));
             this.AddCommand(new MenuCommand(ExecuteRedo, StandardCommands.Redo));
+            this.AddCommand(new MenuCommand(ExecuteAddTabPage, MyMenuCommands.AddTabPage));
         }
 
         private void OnMenuClicked(object sender, EventArgs args)
@@ -74,6 +105,7 @@ namespace Sketchpad.UI.Services
                 selectionCommands.Add(StandardCommands.Delete, "Delete");
                 selectionCommands.Add(StandardCommands.Undo, "Undo");
                 selectionCommands.Add(StandardCommands.Redo, "Redo");
+                selectionCommands.Add(MyMenuCommands.AddTabPage, "Add Tab Page");
 
                 foreach (CommandID id in selectionCommands.Keys)
                 {
@@ -92,7 +124,7 @@ namespace Sketchpad.UI.Services
 
         public override void ShowContextMenu(CommandID menuID, int x, int y)
         {
-            // string contextMenuPath = "/SharpDevelop/FormsDesigner/ContextMenus/";
+            //ISelectionService
 
             if (menuID == MenuCommands.SelectionMenu || menuID == MenuCommands.ContainerMenu)
             {
