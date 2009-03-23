@@ -152,7 +152,6 @@ namespace Host
                 {
                     propertyGrid.SelectedObjects = comps;
                 }
-                
 			}
 		}
 

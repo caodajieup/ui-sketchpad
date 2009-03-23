@@ -8,12 +8,14 @@ using Sketchpad.UI.Controls;
 
 using CommandID = System.ComponentModel.Design.CommandID;
 using MenuCommand = System.ComponentModel.Design.MenuCommand;
+using ICollection = System.Collections.ICollection;
 
 namespace Sketchpad.UI.Services
 {
     class MyMenuCommands
     {
         public static readonly CommandID AddTabPage = new CommandID(StandardCommands.Undo.Guid, 0x1001);
+        public static readonly CommandID RemoveTabPage = new CommandID(StandardCommands.Undo.Guid, 0x1002);
     }
 
     class MenuCommandService : System.ComponentModel.Design.MenuCommandService
@@ -60,6 +62,25 @@ namespace Sketchpad.UI.Services
             }
         }
 
+        void ExecuteRemoveTabPage(object sender, EventArgs e)
+        {
+            ISelectionService selectionService = GetService(typeof(ISelectionService)) as ISelectionService;
+            if (selectionService != null)
+            {
+                System.Collections.ICollection selectedComps = selectionService.GetSelectedComponents();
+                if (selectedComps != null && selectedComps.Count == 1)
+                {
+                    object[] comps = new object[selectedComps.Count];
+                    selectedComps.CopyTo(comps, 0);
+                    TabControl tab = comps[0] as TabControl;
+                    if (tab != null && tab.TabPages.Count > 1)
+                    {
+                        tab.TabPages.RemoveAt(tab.TabPages.Count - 1);
+                    }
+                }
+            }
+        }
+
         void ExecuteUndo(object sender, EventArgs e)
         {
             MyUndoEngine undoEngine = GetService(typeof(UndoEngine)) as MyUndoEngine;
@@ -78,6 +99,7 @@ namespace Sketchpad.UI.Services
             this.AddCommand(new MenuCommand(ExecuteUndo, StandardCommands.Undo));
             this.AddCommand(new MenuCommand(ExecuteRedo, StandardCommands.Redo));
             this.AddCommand(new MenuCommand(ExecuteAddTabPage, MyMenuCommands.AddTabPage));
+            this.AddCommand(new MenuCommand(ExecuteRemoveTabPage, MyMenuCommands.RemoveTabPage));
         }
 
         private void OnMenuClicked(object sender, EventArgs args)
@@ -98,6 +120,7 @@ namespace Sketchpad.UI.Services
 
             if (selectionService != null)
             {
+                ICollection selectedComps = selectionService.GetSelectedComponents();
                 Dictionary<CommandID, string> selectionCommands = new Dictionary<CommandID, string>();
                 selectionCommands.Add(StandardCommands.Cut, "Cut");
                 selectionCommands.Add(StandardCommands.Copy, "Copy");
@@ -105,7 +128,17 @@ namespace Sketchpad.UI.Services
                 selectionCommands.Add(StandardCommands.Delete, "Delete");
                 selectionCommands.Add(StandardCommands.Undo, "Undo");
                 selectionCommands.Add(StandardCommands.Redo, "Redo");
-                selectionCommands.Add(MyMenuCommands.AddTabPage, "Add Tab Page");
+
+                if (selectedComps != null && selectedComps.Count == 1)
+                {
+                    object[] comps = new object[selectedComps.Count];
+                    selectedComps.CopyTo(comps, 0);
+                    if (comps[0].GetType() == typeof(TabControl))
+                    {
+                        selectionCommands.Add(MyMenuCommands.AddTabPage, "Add Page");
+                        selectionCommands.Add(MyMenuCommands.RemoveTabPage, "Remove Page");
+                    }
+                }
 
                 foreach (CommandID id in selectionCommands.Keys)
                 {
