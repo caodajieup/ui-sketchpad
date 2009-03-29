@@ -93,6 +93,10 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
       <Name>Loader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toolbox\Toolbox.csproj">
+      <Project>{3581F0CD-5B33-40F8-A664-F48D544FE0EF}</Project>
+      <Name>Toolbox</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToolWindows\ToolWindows.csproj">
       <Project>{03E50888-7D6D-4AB7-9166-0EE80DD8A9CB}</Project>
       <Name>ToolWindows</Name>

@@ -35,31 +35,35 @@
             // button_
             // 
             this.button_.Location = new System.Drawing.Point(0, 0);
+            this.button_.MaximumSize = new System.Drawing.Size(64, 52);
+            this.button_.MinimumSize = new System.Drawing.Size(64, 52);
             this.button_.Name = "button_";
-            this.button_.Size = new System.Drawing.Size(120, 105);
+            this.button_.Size = new System.Drawing.Size(64, 52);
             this.button_.TabIndex = 0;
             this.button_.UseVisualStyleBackColor = true;
             // 
             // label_
             // 
             this.label_.AutoSize = true;
-            this.label_.Location = new System.Drawing.Point(26, 108);
+            this.label_.Location = new System.Drawing.Point(0, 52);
+            this.label_.MaximumSize = new System.Drawing.Size(64, 12);
+            this.label_.MinimumSize = new System.Drawing.Size(64, 12);
             this.label_.Name = "label_";
-            this.label_.Size = new System.Drawing.Size(65, 12);
+            this.label_.Size = new System.Drawing.Size(64, 12);
             this.label_.TabIndex = 1;
-            this.label_.Text = "RibbonName";
+            this.label_.Text = "Label\r\n";
             this.label_.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // RibbonControl
+            // RibbonCommand
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label_);
             this.Controls.Add(this.button_);
-            this.MaximumSize = new System.Drawing.Size(120, 120);
-            this.MinimumSize = new System.Drawing.Size(120, 120);
-            this.Name = "RibbonControl";
-            this.Size = new System.Drawing.Size(120, 120);
+            this.MaximumSize = new System.Drawing.Size(64, 64);
+            this.MinimumSize = new System.Drawing.Size(64, 64);
+            this.Name = "RibbonCommand";
+            this.Size = new System.Drawing.Size(64, 64);
             this.ResumeLayout(false);
             this.PerformLayout();
 
