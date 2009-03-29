@@ -64,12 +64,10 @@ namespace ToolboxLibrary
 			typeof(System.Windows.Forms.UserControl)
 		};
         private Type[] ribbonControlsToolTypes = new Type[] {
-            typeof(System.Windows.Forms.Label), 
-            typeof(System.Windows.Forms.Button), 
-            typeof(System.Windows.Forms.GroupBox), 
             typeof(System.Windows.Forms.Panel), 
             typeof(System.Windows.Forms.ComboBox), 
             typeof(System.Windows.Forms.TabControl), 
+            typeof(Sketchpad.UI.Controls.RibbonTabControl), 
             typeof(System.Windows.Forms.Splitter),
             typeof(Sketchpad.UI.Controls.RibbonCommand)
         };

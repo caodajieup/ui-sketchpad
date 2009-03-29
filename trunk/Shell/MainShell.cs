@@ -133,7 +133,7 @@ namespace Shell
         {
             _hostSurfaceManager = new HostSurfaceManager();
             _hostSurfaceManager.AddService(typeof(IToolboxService), this.toolbox1);
-            _hostSurfaceManager.AddService(typeof(ToolWindows.SolutionExplorer), this.solutionExplorer1);
+            //_hostSurfaceManager.AddService(typeof(ToolWindows.SolutionExplorer), this.solutionExplorer1);
             _hostSurfaceManager.AddService(typeof(ToolWindows.OutputWindow), this.OutputWindow);
             _hostSurfaceManager.AddService(typeof(System.Windows.Forms.PropertyGrid), this.propertyGrid1);
 
@@ -515,7 +515,7 @@ namespace Shell
                 this.eMenuItem.Enabled = true;
             else
                 this.eMenuItem.Enabled = false;
-            this.solutionExplorer1.AddFileNode(tabText);
+            //this.solutionExplorer1.AddFileNode(tabText);
             
         }
 

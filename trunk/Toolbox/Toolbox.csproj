@@ -50,6 +50,12 @@
     <Compile Include="Controls\RibbonCommand.Designer.cs">
       <DependentUpon>RibbonCommand.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RibbonTabControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RibbonTabControl.Designer.cs">
+      <DependentUpon>RibbonTabControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Toolbox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -75,6 +81,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\RibbonCommand.resx">
       <DependentUpon>RibbonCommand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RibbonTabControl.resx">
+      <DependentUpon>RibbonTabControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Toolbox.resx">
       <DependentUpon>Toolbox.cs</DependentUpon>

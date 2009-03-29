@@ -54,9 +54,9 @@ namespace Sketchpad.UI.Services
                     TabControl tab = comps[0] as TabControl;
                     if (tab != null)
                     {
-                        string title = "TabPage " + (tab.TabCount + 1).ToString();
-                        TabPage newPage = new TabPage(title);
-                        tab.TabPages.Add(newPage);
+                        string title = "TabPage" + (tab.TabCount + 1).ToString();
+                        tab.TabPages.Add(new TabPage(title));
+                        tab.SelectedIndex = tab.TabPages.Count - 1;
                     }
                 }
             }
@@ -75,7 +75,7 @@ namespace Sketchpad.UI.Services
                     TabControl tab = comps[0] as TabControl;
                     if (tab != null && tab.TabPages.Count > 1)
                     {
-                        tab.TabPages.RemoveAt(tab.TabPages.Count - 1);
+                        tab.TabPages.Remove(tab.SelectedTab);
                     }
                 }
             }
@@ -98,13 +98,11 @@ namespace Sketchpad.UI.Services
         {
             this.AddCommand(new MenuCommand(ExecuteUndo, StandardCommands.Undo));
             this.AddCommand(new MenuCommand(ExecuteRedo, StandardCommands.Redo));
-            this.AddCommand(new MenuCommand(ExecuteAddTabPage, MyMenuCommands.AddTabPage));
-            this.AddCommand(new MenuCommand(ExecuteRemoveTabPage, MyMenuCommands.RemoveTabPage));
         }
 
         private void OnMenuClicked(object sender, EventArgs args)
         {
-            MenuItem item = sender as MenuItem;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item != null)
             {
                 MenuCommand cmd = item.Tag as MenuCommand;
@@ -112,9 +110,9 @@ namespace Sketchpad.UI.Services
             }
         }
 
-        private MenuItem[] GetSelectionMenuItems()
+        private ToolStripMenuItem[] GetSelectionMenuItems()
         {
-            List<MenuItem> menuItems = new List<MenuItem>();
+            List<ToolStripMenuItem> menuItems = new List<ToolStripMenuItem>();
 
             ISelectionService selectionService = GetService(typeof(ISelectionService)) as ISelectionService;
 
@@ -129,25 +127,32 @@ namespace Sketchpad.UI.Services
                 selectionCommands.Add(StandardCommands.Undo, "Undo");
                 selectionCommands.Add(StandardCommands.Redo, "Redo");
 
+                foreach (CommandID id in selectionCommands.Keys)
+                {
+                    MenuCommand command = FindCommand(id);
+                    if (command != null)
+                    {
+                        ToolStripMenuItem menuItem = new ToolStripMenuItem(selectionCommands[id], null, new EventHandler(OnMenuClicked));
+                        menuItem.Tag = command;
+                        menuItems.Add(menuItem);
+                    }
+                }
+
                 if (selectedComps != null && selectedComps.Count == 1)
                 {
                     object[] comps = new object[selectedComps.Count];
                     selectedComps.CopyTo(comps, 0);
                     if (comps[0].GetType() == typeof(TabControl))
                     {
-                        selectionCommands.Add(MyMenuCommands.AddTabPage, "Add Page");
-                        selectionCommands.Add(MyMenuCommands.RemoveTabPage, "Remove Page");
-                    }
-                }
-
-                foreach (CommandID id in selectionCommands.Keys)
-                {
-                    MenuCommand command = FindCommand(id);
-                    if (command != null)
-                    {
-                        MenuItem menuItem = new MenuItem(selectionCommands[id], new EventHandler(OnMenuClicked));
-                        menuItem.Tag = command;
-                        menuItems.Add(menuItem);
+                        foreach (DesignerVerb verb in Verbs)
+                        {
+                            if (verb != null)
+                            {
+                                ToolStripMenuItem menuItem = new ToolStripMenuItem(verb.Text, null, new EventHandler(OnMenuClicked));
+                                menuItem.Tag = verb;
+                                menuItems.Add(menuItem);
+                            }
+                        }
                     }
                 }
             }
@@ -161,17 +166,21 @@ namespace Sketchpad.UI.Services
 
             if (menuID == MenuCommands.SelectionMenu || menuID == MenuCommands.ContainerMenu)
             {
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem[] items = GetSelectionMenuItems();
+                ContextMenuStrip contextMenu = new ContextMenuStrip();
+                ToolStripMenuItem[] menuItems = GetSelectionMenuItems();
 
-                if (items.Length > 0)
+                if (menuItems.Length > 0)
                 {
-                    contextMenu.MenuItems.Add(new MenuItem("-"));
-                    foreach(MenuItem item in items)
+                    contextMenu.Items.Add(new ToolStripSeparator());
+                    foreach (ToolStripMenuItem item in menuItems)
                     {
-                        contextMenu.MenuItems.Add(item);
+                        if (item.Text == "Add Tab")
+                            contextMenu.Items.Add(new ToolStripSeparator());
+
+                        contextMenu.Items.Add(item);
                     }
                 }
+
                 contextMenu.Show(panel, panel.PointToClient(new Point(x, y)));
             }
             else
