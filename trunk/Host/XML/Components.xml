@@ -1,69 +1,32 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Components>
-  <Component Name="TextBox" Namespace="System.Windows.Forms" Asm="System.dll">
+  
+  <Component Name="TabControl" Namespace="System.Windows.Forms" Asm="System.dll">
     <Propertys>
-      <Property Name="BackColor" Caption="背影色" Group=""/>
-      <Property Name="BorderStyle" Caption="边框样式" Group=""/>
-      <Property Name="Font" Caption="字体" Group=""/>
-      <Property Name="ForeColor" Caption="字色" Group=""/>
-      <Property Name="Text" Caption="内容" Group=""/>
-      <Property Name="ScrollBars" Caption="滚动条" Group=""/>
-      <Property Name="TextAlign" Caption="文本对齐" Group=""/>
-      <Property Name="Multline" Caption="多行" Group=""/>
-      <Property Name="PasswordChar" Caption="密码文本" Group=""/>
-      <Property Name="Size" Caption="大小" Group=""/>
-      <Property Name="Location" Caption="位置" Group=""/>
+      <Property Name="BackColor" Caption="BackColor" Group=""/>
+      <Property Name="BorderStyle" Caption="BorderStyle" Group=""/>
+      <Property Name="Font" Caption="Font" Group=""/>
+      <Property Name="ForeColor" Caption="ForeColor" Group=""/>
+      <Property Name="Text" Caption="Text" Group=""/>
+      <Property Name="TextAlign" Caption="TextAlign" Group=""/>
+      <Property Name="Size" Caption="Size" Group=""/>
+      <Property Name="Location" Caption="Location" Group=""/>
+      <Property Name="TabPages" Caption="TabPages" Group=""/>
     </Propertys>
     <DataBinding/>
   </Component>
   
-  <Component Name="Label" Namespace="System.Windows.Forms" Asm="System.dll">
+  <Component Name="RibbonCommand" Namespace="Sketchpad.UI.Controls" Asm="Toolbox.dll">
     <Propertys>
-      <Property Name="BackColor" Caption="背影色" Group=""/>
-      <Property Name="BorderStyle" Caption="边框样式" Group=""/>
-      <Property Name="Font" Caption="字体" Group=""/>
-      <Property Name="ForeColor" Caption="字色" Group=""/>
-      <Property Name="Image" Caption="图片" Group=""/>
-      <Property Name="ImageAlign" Caption="图片对齐" Group=""/>
-      <Property Name="Text" Caption="文字" Group=""/>
-      <Property Name="TextAlign" Caption="文本对齐" Group=""/>
-      <Property Name="Size" Caption="大小" Group=""/>
-      <Property Name="Location" Caption="位置" Group=""/>
-    </Propertys>
-    <DataBinding/>
-  </Component>
-  
-  <Component Name="ListBox" Namespace="System.Windows.Forms" Asm="System.dll">
-    <Propertys>
-      <Property Name="BackColor" Caption="背影色" Group=""/>
-      <Property Name="BorderStyle" Caption="边框样式" Group=""/>
-      <Property Name="Font" Caption="字体" Group=""/>
-      <Property Name="ForeColor" Caption="字色" Group=""/>
-      <Property Name="FormatString" Caption="格式串" Group=""/>
-      <Property Name="FormattingEnabled" Caption="启用格式串" Group=""/>
-      <Property Name="Items" Caption="列表项目" Group=""/>
-      <Property Name="MultColumn" Caption="多列" Group=""/>
-      <Property Name="IntegralHeight" Caption="整数高度" Group=""/>
-      <Property Name="Size" Caption="大小" Group=""/>
-      <Property Name="Location" Caption="位置" Group=""/>
-    </Propertys>
-    <DataBinding/>
-  </Component>
-  
-  <Component Name="Button" Namespace="System.Windows.Forms" Asm="System.dll">
-    <Propertys>
-      <Property Name="BackColor" Caption="背影色" Group=""/>
-      <Property Name="BorderStyle" Caption="边框样式" Group=""/>
-      <Property Name="Font" Caption="字体" Group=""/>
-      <Property Name="ForeColor" Caption="字色" Group=""/>
-      <Property Name="FlatStyle" Caption="样式" Group=""/>
-      <Property Name="Text" Caption="文本" Group=""/>
-      <Property Name="Size" Caption="大小" Group=""/>
-      <Property Name="Location" Caption="位置" Group=""/>
+      <Property Name="BackgroundImage" Caption="BackgroundImage" Group="Appearance"/>
+      <Property Name="Font" Caption="Font" Group="Appearance"/>
+      <Property Name="Text" Caption="Text" Group="Appearance"/>
+      <Property Name="Location" Caption="Location" Group="Layout"/>
+      <Property Name="MenuMacro" Caption="MenuMacro" Group="Advanced"/>
+      <Property Name="IconSize" Caption="IconSize" Group="Advanced"/>
     </Propertys>
     <DataBinding>
-
     </DataBinding>
-
   </Component>
+  
 </Components>

@@ -131,16 +131,12 @@ namespace Host
 
                 XmlNode tmpXNode = null;
                 CProperty cp = null;
-                Type compType = comps[0].GetType();
-                if (compType == typeof(System.Windows.Forms.Button))
-                {
-                    tmpXNode = _xDoc.SelectSingleNode("Components/Component[@Name=\"Button\"]");
-                }
-                else if (compType == typeof(System.Windows.Forms.Label))
-                {
-                    tmpXNode = _xDoc.SelectSingleNode("Components/Component[@Name=\"Label\"]");
-                }
+                string compTypeName = comps[0].GetType().Name;
+                string singleNodePath = "Components/Component[@Name=\"" 
+                                        + compTypeName
+                                        + "\"]";
 
+                tmpXNode = _xDoc.SelectSingleNode(singleNodePath);
 
                 if (tmpXNode != null)
                 {

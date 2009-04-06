@@ -34,24 +34,27 @@
             // 
             // button_
             // 
-            this.button_.Location = new System.Drawing.Point(0, 0);
-            this.button_.MaximumSize = new System.Drawing.Size(64, 52);
-            this.button_.MinimumSize = new System.Drawing.Size(64, 52);
+            this.button_.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_.Location = new System.Drawing.Point(10, 0);
+            this.button_.MaximumSize = new System.Drawing.Size(32, 32);
+            this.button_.MinimumSize = new System.Drawing.Size(16, 16);
             this.button_.Name = "button_";
-            this.button_.Size = new System.Drawing.Size(64, 52);
+            this.button_.Size = new System.Drawing.Size(32, 32);
             this.button_.TabIndex = 0;
             this.button_.UseVisualStyleBackColor = true;
             // 
             // label_
             // 
             this.label_.AutoSize = true;
-            this.label_.Location = new System.Drawing.Point(0, 52);
-            this.label_.MaximumSize = new System.Drawing.Size(64, 12);
-            this.label_.MinimumSize = new System.Drawing.Size(64, 12);
+            this.label_.Location = new System.Drawing.Point(0, 35);
+            this.label_.MaximumSize = new System.Drawing.Size(52, 16);
+            this.label_.MinimumSize = new System.Drawing.Size(52, 16);
             this.label_.Name = "label_";
-            this.label_.Size = new System.Drawing.Size(64, 12);
+            this.label_.Size = new System.Drawing.Size(52, 16);
             this.label_.TabIndex = 1;
-            this.label_.Text = "Label\r\n";
+            this.label_.Text = "RibbonCommand";
             this.label_.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // RibbonCommand
@@ -60,10 +63,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label_);
             this.Controls.Add(this.button_);
-            this.MaximumSize = new System.Drawing.Size(64, 64);
-            this.MinimumSize = new System.Drawing.Size(64, 64);
+            this.MaximumSize = new System.Drawing.Size(0, 48);
+            this.MinimumSize = new System.Drawing.Size(52, 48);
             this.Name = "RibbonCommand";
-            this.Size = new System.Drawing.Size(64, 64);
+            this.Size = new System.Drawing.Size(52, 48);
             this.ResumeLayout(false);
             this.PerformLayout();
 
